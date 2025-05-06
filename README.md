@@ -57,4 +57,4 @@ Use `Job` when:
 
 ---
 
-For more advanced control or performance-critical scenarios, refer to Ultimate++'s `CoWork` or traditional threading constructs like `Thread`.
+For more advanced control or performance-critical scenarios, refer to U++'s `CoWork` or traditional threading constructs like `Thread`.
