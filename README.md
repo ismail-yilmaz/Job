@@ -1,4 +1,4 @@
-# Job Package for Ultimate++
+# Job Package for U++
 
 The `Job` template class provides a lightweight, scope-bound mechanism to run asynchronous tasks on a **dedicated single worker thread**. It is designed with RAII principles to ensure safety and ease of use, offering features similar to `std::future` / `std::promise`—including support for return values, `void` specialization, and exception propagation.
 
