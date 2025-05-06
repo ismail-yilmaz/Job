@@ -1,0 +1,16 @@
+description "A lightweight and flexible multithreading tool, using promise/future mechanism.\377";
+
+uses
+	Core;
+
+file
+	Job.h,
+	Job.cpp,
+	Info readonly separator,
+	Copying,
+	Docs readonly separator,
+	src.tpp;
+
+mainconfig
+	"" = "";
+
