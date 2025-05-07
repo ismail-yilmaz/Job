@@ -36,5 +36,5 @@ CONSOLE_APP_MAIN
 	}
 
 	Sleep(1000);
-	//job2.Cancel(); // Worker will automatically cancel the job when it goes out of scope.
+	job2.Cancel(); // Worker will automatically cancel the job when it goes out of scope.
 }

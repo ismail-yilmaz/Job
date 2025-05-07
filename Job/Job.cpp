@@ -19,11 +19,9 @@ JobWorker::JobWorker()
 
 JobWorker::~JobWorker()
 {
-	lock.Enter();
 	cancel = true;
 	shutdown = true;
 	ready.Signal();
-	lock.Leave();
 	Wait();
 	LLOG("Shut down signal sent...");
 	work.Wait();
@@ -32,8 +30,7 @@ JobWorker::~JobWorker()
 
 bool JobWorker::Start(Event<>&& fn)
 {
-	Mutex::Lock __(lock);
-	
+	lock.Enter();
 	if(cancel || cb) {
 		LLOG("Couldn't start working. Worker is busy.");
 		return false;
@@ -43,33 +40,36 @@ bool JobWorker::Start(Event<>&& fn)
 	exc = nullptr;
 	cancel = false;
 	LLOG("Starting to work...");
+	lock.Leave();
 	ready.Signal();
 	return true;
 }
 
 void JobWorker::Loop()
 {
-	Mutex::Lock __(lock);
-	for (;;) {
-	    while (!cb && !shutdown) {
+	for(;;) {
+		lock.Enter();
+	    while(!cb && !shutdown) {
 	        LLOG("Waiting for work");
-	        ready.Wait(lock); // This MUST be called with the lock held
+	        ready.Wait(lock);
 	    }
 
 	    if(shutdown) {
 	        LLOG("Shut down signal received. Shutting down...");
+	        lock.Leave();
 	        return;
 	    }
 	
-		lock.Leave();
 	    try {
+			lock.Leave(); // We should leave the lock here.
 			cb();
 	    }
-	    catch (...) {
+	    catch(...) {
 	        LLOG("Exception raised");
+	        Mutex::Lock __(lock);
 			exc = std::current_exception();
 		}
-	    lock.Enter();
+
 	    cb = Null;
 	    done.Signal();
 	}
