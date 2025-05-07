@@ -1,0 +1,11 @@
+uses
+	Core,
+	Job;
+
+file
+	main.cpp,
+	Etalon.log;
+
+mainconfig
+	"" = "";
+

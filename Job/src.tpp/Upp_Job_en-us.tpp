@@ -44,8 +44,7 @@ only one [%-*@3 f] at a time. Invoking this method while a work
 is in progress simply returns false.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:Job`:`:IsFinished`(`)const: [@(0.0.255) bool]_[* IsFinished]()_[@(0.0.255) cons
-t]&]
+[s5;:Upp`:`:Job`:`:IsFinished`(`): [@(0.0.255) bool] [* IsFinished]()&]
 [s2;%% Returns true if the work is finished. This method is non`-blocking. 
 It returns false if the work is not finished.&]
 [s3; &]

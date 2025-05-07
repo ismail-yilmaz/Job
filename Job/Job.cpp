@@ -12,15 +12,19 @@ JobWorker::JobWorker()
 	exc = nullptr;
 	cancel = false;
 	shutdown = false;
-	if(!work.RunNice([=]{ JobWorker::ptr = this; Loop(); }))
+	if(!work.RunNice([=]{ ptr = this; Loop(); }))
 		throw Exc("Couldn't create new job.");
 	LLOG("Initialized.");
 }
 
 JobWorker::~JobWorker()
 {
+	lock.Enter();
+	exc = nullptr;
+	ptr = nullptr;
 	cancel = true;
 	shutdown = true;
+	lock.Leave();
 	ready.Signal();
 	Wait();
 	LLOG("Shut down signal sent...");
@@ -31,7 +35,8 @@ JobWorker::~JobWorker()
 bool JobWorker::Start(Event<>&& fn)
 {
 	lock.Enter();
-	if(cancel || cb) {
+	if(cancel || cb || shutdown) {
+		lock.Leave();
 		LLOG("Couldn't start working. Worker is busy.");
 		return false;
 	}
@@ -53,15 +58,20 @@ void JobWorker::Loop()
 	        LLOG("Waiting for work");
 	        ready.Wait(lock);
 	    }
-
+		
+		lock.Leave();
+		
 	    if(shutdown) {
 	        LLOG("Shut down signal received. Shutting down...");
-	        lock.Leave();
 	        return;
 	    }
-	
+	    
+	    if(cancel) {
+	        LLOG("Job canceled before start");
+	        return;
+	    }
+	    
 	    try {
-			lock.Leave(); // We should leave the lock here.
 			cb();
 	    }
 	    catch(...) {
@@ -83,5 +93,6 @@ void JobWorker::Wait()
 		done.Wait(lock);
 	}
 }
-}
 
+
+}

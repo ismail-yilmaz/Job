@@ -15,7 +15,7 @@ public:
     void                Loop();
     void                Wait();
     void                Cancel()                    { cancel = true; Wait();  Rethrow();  }
-    bool                IsWorking()                 { Mutex::Lock __(lock); return cb; }
+    bool                IsWorking()                 { Mutex::Lock __(lock); return !!cb; }
 
     static bool         IsCanceled()                { return ptr && ptr->cancel; }
     void                Rethrow()                   { Mutex::Lock __(lock); if(exc) std::rethrow_exception(exc); }
@@ -58,7 +58,7 @@ private:
 public:
     template<class Function, class... Args>
     bool    Do(Function&& f, Args&&... args)            { return worker && worker->Start(f, args...); }
-    bool    IsFinished() const                          { return !worker || !worker->v.IsWorking();  }
+    bool    IsFinished()                                { return !worker || !worker->v.IsWorking();  }
     void    Cancel()                                    { ASSERT(worker); worker->v.Cancel(); }
     static bool IsCanceled()                            { return JobWorker::IsCanceled(); }
     T       Get()                                       { ASSERT(worker); return worker->Get(); }

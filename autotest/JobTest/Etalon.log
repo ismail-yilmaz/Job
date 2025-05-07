@@ -1,0 +1,10 @@
+* /home/maldoror/Geliştirme/upp/.cache/upp.out/Job/CLANG.Debug.Debug_Full.Shared/JobTest 07.05.2025 23:35:46, user: maldoror
+
+---Basic execution: PASSED
+---Void jobs: PASSED
+---Exception handling: PASSED
+---Cancellation: PASSED
+---Automatic scope cancellation: PASSED
+---Move semantics: PASSED
+---Cancellation during execution: PASSED
+---Immediate cancellation: PASSED
