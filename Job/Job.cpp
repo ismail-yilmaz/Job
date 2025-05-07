@@ -22,9 +22,9 @@ JobWorker::~JobWorker()
 	lock.Enter();
 	cancel = true;
 	shutdown = true;
+	ready.Signal();
 	lock.Leave();
 	Wait();
-	ready.Signal();
 	LLOG("Shut down signal sent...");
 	work.Wait();
 	LLOG("Joined.");
@@ -84,3 +84,4 @@ void JobWorker::Wait()
 	}
 }
 }
+
