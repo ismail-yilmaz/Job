@@ -14,7 +14,7 @@ public:
     void                Stop();
     void                Loop();
     void                Wait();
-    void                Cancel()                    { Mutex::Lock __(lock); cancel = true; Wait();  Rethrow();  }
+    void                Cancel()                    { cancel = true; Wait();  Rethrow();  }
     bool                IsWorking()                 { Mutex::Lock __(lock); return cb; }
 
     static bool         IsCanceled()                { return ptr && ptr->cancel; }
